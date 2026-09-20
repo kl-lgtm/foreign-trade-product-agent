@@ -1,6 +1,9 @@
 # 忽略本机 Python 虚拟环境。
 .venv/
 
+# 忽略本项目的隔离 Git 工作区。
+.worktrees/
+
 # 忽略 Python 运行缓存。
 __pycache__/
 *.py[cod]

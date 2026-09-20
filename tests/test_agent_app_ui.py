@@ -23,6 +23,37 @@ class ProductAgentAppUiTest(unittest.TestCase):
         self.assertEqual(len(app.file_uploader), 0)
         self.assertIsNotNone(app.chat_input(key="agent_question_input"))
 
+    def test_agent_page_and_evaluator_use_langchain_service(
+        self,
+    ) -> None:
+        """页面和真实评测器都应使用正式的 LangChain Agent 链路。"""
+
+        product_agent_app_source = (
+            PROJECT_ROOT / "agent_app.py"
+        ).read_text(encoding="utf-8")
+        product_evaluator_source = (
+            PROJECT_ROOT
+            / "product_agent"
+            / "agent_evaluator.py"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn(
+            "from product_agent.langchain_product_agent_service import (",
+            product_agent_app_source,
+        )
+        self.assertIn(
+            "run_langchain_product_agent",
+            product_agent_app_source,
+        )
+        self.assertIn(
+            "from product_agent.langchain_product_agent_service import (",
+            product_evaluator_source,
+        )
+        self.assertIn(
+            "run_langchain_product_agent",
+            product_evaluator_source,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

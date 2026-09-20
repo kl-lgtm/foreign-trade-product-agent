@@ -15,7 +15,9 @@ from product_agent.agent_logging_service import (
     record_product_error,
     record_product_event,
 )
-from product_agent.product_agent_service import run_product_agent
+from product_agent.langchain_product_agent_service import (
+    run_langchain_product_agent,
+)
 
 
 # 页面配置必须最先执行。
@@ -122,7 +124,7 @@ if agent_question:
         try:
             agent_started_at = perf_counter()
             with st.status("Agent 正在分析并调用工具", expanded=False) as status:
-                agent_result = run_product_agent(agent_question)
+                agent_result = run_langchain_product_agent(agent_question)
                 status.update(label="Agent 回答完成", state="complete")
             agent_answer = str(agent_result["answer"])
             agent_debug_data = {"tool_events": agent_result["tool_events"]}

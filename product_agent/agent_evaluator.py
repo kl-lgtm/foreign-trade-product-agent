@@ -560,8 +560,8 @@ def main() -> None:
 
     # 延迟导入真实Agent
     # 这样普通单元测试不会初始化外部API相关模块
-    from product_agent.product_agent_service import (
-        run_product_agent,
+    from product_agent.langchain_product_agent_service import (
+        run_langchain_product_agent,
     )
 
     # 从项目默认JSON文件加载固定评测题库
@@ -582,7 +582,7 @@ def main() -> None:
                 product_evaluation_cases
             ),
             product_agent_runner=(
-                run_product_agent
+                run_langchain_product_agent
             ),
         )
     )

@@ -46,6 +46,12 @@ Copy-Item .env.example .env
 streamlit run agent_app.py
 ```
 
+## LangChain 实现说明
+
+正式运行链路使用 LangChain 的 `ChatOpenAI` 对接 OpenAI 兼容大模型 API，使用 `@tool` 将本地 CSV 产品查询封装为 `query_product` 工具。模型会根据问题决定是否调用工具，工具结果会按用户提问范围筛选后再生成回答，并保留完整工具调用记录供页面展示和评测。
+
+项目保留原生 Function Calling 实现作为学习对照，但 Streamlit 页面与真实评测器默认使用 LangChain 服务。
+
 ## 测试与评测
 
 ```powershell

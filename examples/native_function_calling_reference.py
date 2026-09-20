@@ -1,7 +1,7 @@
-# 导入json，用于解析模型生成的工具参数
-# 也用于把Python工具结果转换成JSON文本
 """原生 Function Calling 的冻结学习参考，不参与正式运行链路。"""
 
+# 导入json，用于解析模型生成的工具参数。
+# 也用于把Python工具结果转换成JSON文本。
 import json
 
 # 导入os，用于读取.env中的模型名称

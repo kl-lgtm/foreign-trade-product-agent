@@ -1,0 +1,16 @@
+# 忽略本机 Python 虚拟环境。
+.venv/
+
+# 忽略 Python 运行缓存。
+__pycache__/
+*.py[cod]
+
+# 忽略包含真实 API 密钥的本机环境变量文件。
+.env
+
+# 忽略本机会话数据库和运行日志。
+trade_data/database/
+trade_logs/
+
+# 忽略每次真实评测产生的报告，保留题库。
+trade_data/evaluation/agent_evaluation_report.json

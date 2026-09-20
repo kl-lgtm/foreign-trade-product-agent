@@ -1,0 +1,43 @@
+[
+  {
+    "case_id": "trade_agent_case_001",
+    "question": "查询A001的价格和库存",
+    "expected_tool": "query_product",
+    "expected_product_id": "A001",
+    "expected_tool_result_found": true,
+    "expected_answer_keywords": [
+      "8.5",
+      "2600"
+    ]
+  },
+  {
+    "case_id": "trade_agent_case_002",
+    "question": "A002的最小起订量和预计交期是多少？",
+    "expected_tool": "query_product",
+    "expected_product_id": "A002",
+    "expected_tool_result_found": true,
+    "expected_answer_keywords": [
+      "800",
+      "20"
+    ]
+  },
+  {
+    "case_id": "trade_agent_case_003",
+    "question": "查询A999目前的库存",
+    "expected_tool": "query_product",
+    "expected_product_id": "A999",
+    "expected_tool_result_found": false,
+    "expected_answer_keywords": [
+      "A999"
+    ]
+  },
+  {
+    "case_id": "trade_agent_case_004",
+    "question": "请简单解释外贸中的FOB是什么意思",
+    "expected_tool": null,
+    "expected_product_id": null,
+    "expected_answer_keywords": [
+      "FOB"
+    ]
+  }
+]

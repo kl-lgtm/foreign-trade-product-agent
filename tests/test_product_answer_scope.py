@@ -2,7 +2,7 @@
 
 import unittest
 
-from product_agent.product_agent_service import (
+from product_agent.product_answer_scope import (
     select_product_fields_for_answer,
 )
 

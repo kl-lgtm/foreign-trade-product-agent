@@ -25,8 +25,8 @@ from langchain_core.tools import BaseTool, tool
 # 导入 LangChain 的 OpenAI 兼容聊天模型封装。
 from langchain_openai import ChatOpenAI
 
-# 导入现有字段筛选规则，确保原生与 LangChain 链路的回答范围一致。
-from product_agent.product_agent_service import (
+# 导入独立字段筛选规则，避免正式链路依赖原生参考实现。
+from product_agent.product_answer_scope import (
     select_product_fields_for_answer,
 )
 

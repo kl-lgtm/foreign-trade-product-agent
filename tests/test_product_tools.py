@@ -5,8 +5,8 @@ import unittest
 from product_agent.agent_evaluator import (
     load_product_agent_evaluation_cases,
 )
-from product_agent.product_agent_service import (
-    TRADE_AGENT_TOOL_DEFINITIONS,
+from product_agent.langchain_product_agent_service import (
+    TRADE_LANGCHAIN_PRODUCT_TOOLS,
 )
 from product_agent.product_tools import query_product
 
@@ -27,9 +27,8 @@ class ProductToolsTest(unittest.TestCase):
         """题库中的工具名应与 Agent 实际注册的工具保持一致。"""
 
         product_registered_tool_names = {
-            product_tool_definition["function"]["name"]
-            for product_tool_definition
-            in TRADE_AGENT_TOOL_DEFINITIONS
+            product_tool.name
+            for product_tool in TRADE_LANGCHAIN_PRODUCT_TOOLS
         }
 
         for product_evaluation_case in (

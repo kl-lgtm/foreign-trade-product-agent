@@ -20,8 +20,6 @@ foreign-trade-product-agent/
 ├─ agent_app.py               # Streamlit 网页入口
 ├─ product_agent/             # 正式 LangChain Agent、工具、评测与会话模块
 │  └─ product_answer_scope.py # 按问题范围筛选产品字段的公共规则
-├─ examples/                  # 非正式运行的学习参考代码
-│  └─ native_function_calling_reference.py
 ├─ trade_data/
 │  ├─ structured_data/        # 模拟产品 CSV
 │  └─ evaluation/             # Agent 评测用例
@@ -53,7 +51,7 @@ streamlit run agent_app.py
 
 正式运行链路使用 LangChain 的 `ChatOpenAI` 对接 OpenAI 兼容大模型 API，使用 `@tool` 将本地 CSV 产品查询封装为 `query_product` 工具。模型会根据问题决定是否调用工具，工具结果会按用户提问范围筛选后再生成回答，并保留完整工具调用记录供页面展示和评测。
 
-`examples/native_function_calling_reference.py` 保留原生 Function Calling 的冻结学习对照。它不被 Streamlit 页面、真实评测器或正式 LangChain 服务导入；正式运行仅使用 LangChain 链路。
+Streamlit 页面、真实评测器和产品查询工具均只使用 LangChain 正式链路。
 
 ## 测试与评测
 

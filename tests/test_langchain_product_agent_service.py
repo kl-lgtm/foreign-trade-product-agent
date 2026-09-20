@@ -1,6 +1,7 @@
 """验证 LangChain 产品业务 Agent 的工具注册与查询能力。"""
 
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from langchain_core.messages import AIMessage
@@ -122,6 +123,111 @@ class LangChainProductAgentServiceTest(unittest.TestCase):
         self.assertTrue(
             product_agent_result["tool_events"][0]["result"]["data"]["found"]
         )
+
+    @patch(
+        "product_agent.langchain_product_agent_service."
+        "create_langchain_product_model"
+    )
+    def test_agent_returns_tool_parameter_error_without_crashing(
+        self,
+        product_model_factory_mock,
+    ) -> None:
+        """非字典工具参数应作为结果回传，而不是中断 Agent。"""
+
+        class FakeBoundProductModel:
+            """先返回错误参数，再返回模型最终回答。"""
+
+            def __init__(self) -> None:
+                """初始化模拟模型的调用次数。"""
+
+                self.product_invoke_count = 0
+
+            def invoke(self, product_messages):
+                """模拟一条参数错误的工具调用和后续回答。"""
+
+                self.product_invoke_count += 1
+                if self.product_invoke_count == 1:
+                    return SimpleNamespace(
+                        content="",
+                        tool_calls=[
+                            {
+                                "name": "query_product",
+                                "args": ["A001"],
+                                "id": "call_invalid_arguments",
+                            }
+                        ],
+                    )
+                return SimpleNamespace(
+                    content="产品查询参数格式不正确。",
+                    tool_calls=[],
+                )
+
+        class FakeProductModel:
+            """提供绑定工具能力的模拟模型。"""
+
+            def bind_tools(self, product_tools):
+                """返回可按顺序执行的模拟模型。"""
+
+                return FakeBoundProductModel()
+
+        product_model_factory_mock.return_value = FakeProductModel()
+
+        product_agent_result = run_langchain_product_agent("查询 A001")
+
+        self.assertIn("参数格式", product_agent_result["answer"])
+        self.assertEqual(
+            product_agent_result["tool_events"][0]["result"]["error"],
+            "工具参数必须是 JSON 对象。",
+        )
+
+    @patch(
+        "product_agent.langchain_product_agent_service."
+        "create_langchain_product_model"
+    )
+    def test_agent_stops_after_configured_tool_step_limit(
+        self,
+        product_model_factory_mock,
+    ) -> None:
+        """模型持续请求工具时，Agent 应在指定步数后中止。"""
+
+        class FakeBoundProductModel:
+            """每轮都请求同一个有效的产品查询工具。"""
+
+            def __init__(self) -> None:
+                """初始化调用序号，用于生成唯一工具调用标识。"""
+
+                self.product_invoke_count = 0
+
+            def invoke(self, product_messages):
+                """返回不会结束的工具调用。"""
+
+                self.product_invoke_count += 1
+                return AIMessage(
+                    content="",
+                    tool_calls=[
+                        {
+                            "name": "query_product",
+                            "args": {"product_id": "A001"},
+                            "id": f"call_{self.product_invoke_count}",
+                        }
+                    ],
+                )
+
+        class FakeProductModel:
+            """提供绑定工具能力的模拟模型。"""
+
+            def bind_tools(self, product_tools):
+                """返回会持续请求工具的模拟模型。"""
+
+                return FakeBoundProductModel()
+
+        product_model_factory_mock.return_value = FakeProductModel()
+
+        with self.assertRaisesRegex(RuntimeError, "2 步内未完成"):
+            run_langchain_product_agent(
+                "查询 A001 价格",
+                product_max_steps=2,
+            )
 
 
 if __name__ == "__main__":
